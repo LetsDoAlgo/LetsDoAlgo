@@ -1,0 +1,886 @@
+/////////////////////////////////////////////////////////////////
+postfix evaluation:  “2 3 1 * + 9 -“
+
+class Geek 
+    { 
+        //Main() method 
+        static void Main() 
+        { 
+            Geek e = new Geek(); 
+            e.v = ("231*+9-"); 
+            e.expression(); 
+            Console.WriteLine("postfix evaluation: " + e.answer); 
+            Console.Read(); 
+        } 
+  
+        public string v; 
+        //'v' is variable to store the string value 
+  
+        public string answer; 
+        Stack i = new Stack(); 
+        //'Stack()' is inbuilt function for namespace 'System.Collections' 
+  
+        public void expression() 
+        //evaluation method 
+        { 
+            int a, b, ans; 
+            for (int j = 0; j < v.Length; j++) 
+            //'v.Length' means length of the string 
+            { 
+                String c = v.Substring(j, 1); 
+                if (c.Equals("*")) 
+                { 
+                    String sa = (String)i.Pop(); 
+                    String sb = (String)i.Pop(); 
+                    a = Convert.ToInt32(sb); 
+                    b = Convert.ToInt32(sa); 
+                    ans = a * b; 
+                    i.Push(ans.ToString()); 
+  
+                } 
+                else if (c.Equals("/")) 
+                { 
+                    String sa = (String)i.Pop(); 
+                    String sb = (String)i.Pop(); 
+                    a = Convert.ToInt32(sb); 
+                    b = Convert.ToInt32(sa); 
+                    ans = a / b; 
+                    i.Push(ans.ToString()); 
+                } 
+                else if (c.Equals("+")) 
+                { 
+                    String sa = (String)i.Pop(); 
+                    String sb = (String)i.Pop(); 
+                    a = Convert.ToInt32(sb); 
+                    b = Convert.ToInt32(sa); 
+                    ans = a + b; 
+                    i.Push(ans.ToString()); 
+  
+                } 
+                else if (c.Equals("-")) 
+                { 
+                    String sa = (String)i.Pop(); 
+                    String sb = (String)i.Pop(); 
+                    a = Convert.ToInt32(sb); 
+                    b = Convert.ToInt32(sa); 
+                    ans = a - b; 
+                    i.Push(ans.ToString()); 
+  
+                } 
+                else
+                { 
+                    i.Push(v.Substring(j, 1)); 
+                } 
+            } 
+            answer = (String)i.Pop(); 
+        } 
+    } 
+
+
+
+//////////////////////////////////////////////////////////////////
+Read the Prefix expression in reverse order (from right to left)
+If the symbol is an operand, then push it onto the Stack
+If the symbol is an operator, then pop two operands from the Stack
+Create a string by concatenating the two operands and the operator between them.
+string = (operand1 + operator + operand2)
+And push the resultant string back to Stack
+Repeat the above steps until end of Prefix expression.
+
+
+// function to check if character is operator or not 
+bool isOperator(char x) { 
+  switch (x) { 
+  case '+': 
+  case '-': 
+  case '/': 
+  case '*': 
+    return true; 
+  } 
+  return false; 
+} 
+  
+// Convert prefix to Infix expression 
+string preToInfix(string pre_exp) { 
+  stack<string> s; 
+  
+  // length of expression 
+  int length = pre_exp.size(); 
+  
+  // reading from right to left 
+  for (int i = length - 1; i >= 0; i--) { 
+  
+    // check if symbol is operator 
+    if (isOperator(pre_exp[i])) { 
+  
+      // pop two operands from stack 
+      string op1 = s.top();   s.pop(); 
+      string op2 = s.top();   s.pop(); 
+  
+      // concat the operands and operator 
+      string temp = "(" + op1 + pre_exp[i] + op2 + ")"; 
+  
+      // Push string temp back to stack 
+      s.push(temp); 
+    } 
+  
+    // if symbol is an operand 
+    else { 
+  
+      // push the operand to the stack 
+      s.push(string(1, pre_exp[i])); 
+    } 
+  } 
+  
+  // Stack now contains the Infix expression 
+  return s.top(); 
+} 
+  
+// Driver Code 
+int main() { 
+  string pre_exp = "*-A/BC-/AKL"; 
+  cout << "Infix : " << preToInfix(pre_exp); 
+  return 0;
+//////////////////////////////////////////////////////////////////
+postix to infix 
+
+static Boolean isOperand(char x) 
+{ 
+    return (x >= 'a' && x <= 'z') || 
+            (x >= 'A' && x <= 'Z'); 
+} 
+  
+// Get Infix for a given postfix 
+// expression 
+static String getInfix(String exp) 
+{ 
+    Stack s = new Stack(); 
+  
+    for (int i = 0; i < exp.Length; i++) 
+    { 
+        // Push operands 
+        if (isOperand(exp[i])) 
+        { 
+            s.Push(exp[i] + ""); 
+        } 
+  
+        // We assume that input is 
+        // a valid postfix and expect 
+        // an operator. 
+        else
+        { 
+            String op1 = (String) s.Peek(); 
+            s.Pop(); 
+            String op2 = (String) s.Peek(); 
+            s.Pop(); 
+            s.Push("(" + op2 + exp[i] + 
+                    op1 + ")"); 
+        } 
+    } 
+  
+    // There must be a single element 
+    // in stack now which is the required 
+    // infix. 
+    return (String)s.Peek(); 
+} 
+
+////////////////////////////////////////////////////////////////////////////////////
+
+infix to postfix
+class Test 
+{ 
+    // A utility function to return precedence of a given operator  
+    // Higher returned value means higher precedence  
+    internal static int Prec(char ch) 
+    { 
+        switch (ch) 
+        { 
+        case '+': 
+        case '-': 
+            return 1; 
+  
+        case '*': 
+        case '/': 
+            return 2; 
+  
+        case '^': 
+            return 3; 
+        } 
+        return -1; 
+    } 
+  
+    // The main method that converts given infix expression  
+    // to postfix expression.   
+    public static string infixToPostfix(string exp) 
+    { 
+        // initializing empty String for result  
+        string result = ""; 
+  
+        // initializing empty stack  
+        Stack<char> stack = new Stack<char>(); 
+  
+        for (int i = 0; i < exp.Length; ++i) 
+        { 
+            char c = exp[i]; 
+  
+             // If the scanned character is an operand, add it to output.  
+            if (char.IsLetterOrDigit(c)) 
+            { 
+                result += c; 
+            } 
+  
+            // If the scanned character is an '(', push it to the stack.  
+            else if (c == '(') 
+            { 
+                stack.Push(c); 
+            } 
+  
+            //  If the scanned character is an ')', pop and output from the stack   
+            // until an '(' is encountered.  
+            else if (c == ')') 
+            { 
+                while (stack.Count > 0 && stack.Peek() != '(') 
+                { 
+                    result += stack.Pop(); 
+                } 
+  
+                if (stack.Count > 0 && stack.Peek() != '(') 
+                { 
+                    return "Invalid Expression"; // invalid expression 
+                } 
+                else
+                { 
+                    stack.Pop(); 
+                } 
+            } 
+            else // an operator is encountered 
+            { 
+                while (stack.Count > 0 && Prec(c) <= Prec(stack.Peek())) 
+                { 
+                    result += stack.Pop(); 
+                } 
+                stack.Push(c); 
+            } 
+  
+        } 
+  
+        // pop all the operators from the stack  
+        while (stack.Count > 0) 
+        { 
+            result += stack.Pop(); 
+        } 
+  
+        return result; 
+    } 
+  
+    // Driver method   
+    public static void Main(string[] args) 
+    { 
+        string exp = "a+b*(c^d-e)^(f+g*h)-i"; 
+        Console.WriteLine(infixToPostfix(exp)); 
+    } 
+} 
+  
+///////////////////////////////////////////////////////////////////////
+TSP:
+
+Consider city 1 (let say 0th node) as the starting and ending point. Since route is cyclic, we can consider any point as starting point.
+Start traversing from the source to its adjacent nodes in dfs manner.
+Calculate cost of every traversal and keep track of minimum cost and keep on updating the value of minimum cost stored value.
+Return the permutation with minimum cost.
+
+////////////////////////////////////////////////////////////////////////
+// C# Program to find the longest  
+// common prefix  
+
+sort array first and find the common prefix 
+or
+using System; 
+  
+class GFG 
+{ 
+// A Utility Function to find  
+// the common prefix between  
+// strings- str1 and str2  
+static string commonPrefixUtil(string str1,  
+                               string str2)  
+{  
+    string result = "";  
+    int n1 = str1.Length,  
+        n2 = str2.Length;  
+  
+    for (int i = 0, j = 0;  
+             i <= n1 - 1 && j <= n2 - 1; 
+             i++, j++)  
+    {  
+        if (str1[i] != str2[j])  
+            break;  
+        result += str1[i];  
+    }  
+    return (result);  
+}  
+  
+// A Divide and Conquer based  
+// function to find the longest 
+// common prefix. This is similar  
+// to the merge sort technique  
+static string commonPrefix(string []arr,  
+                           int low, int high)  
+{  
+    if (low == high)  
+        return (arr[low]);  
+  
+    if (high > low)  
+    {  
+        // Same as (low + high)/2,  
+        // but avoids overflow for  
+        // large low and high  
+        int mid = low + (high - low) / 2;  
+  
+        string str1 = commonPrefix(arr, low, mid);  
+        string str2 = commonPrefix(arr, mid + 1, high);  
+  
+        return (commonPrefixUtil(str1, str2));  
+    }  
+    return null; 
+}  
+  
+// Driver Code 
+public static void Main()  
+{ 
+    String []arr = {"geeksforgeeks", "geeks", 
+                    "geek", "geezer"}; 
+    int n = arr.Length; 
+  
+    String ans = commonPrefix(arr, 0, n - 1); 
+  
+    if (ans.Length!= 0) 
+    { 
+        Console.Write("The longest common " +  
+                         "prefix is " + ans); 
+    }  
+    else
+    { 
+        Console.Write("There is no common prefix"); 
+    } 
+} 
+} 
+  
+
+Output :
+The longest common prefix is gee
+Time Complexity : Since we are iterating through all the characters of all the strings, so we can say that the
+ time complexity is O(N M) where,
+
+N = Number of strings
+M = Length of the largest string string
+Auxiliary Space : To store the longest prefix string we are allocating space which is O(M Log N).
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////
+METHOD 2 (Use Hashing)
+This method works in O(n) time.
+
+1) Initialize an empty hash table s.
+2) Do following for each element A[i] in A[]
+   (a)    If s[x - A[i]] is set then print the pair (A[i], x - A[i])
+   (b)    Insert A[i] into s.
+
+     static void printpairs(int[] arr, 
+                           int sum) 
+    { 
+        HashSet<int> s = new HashSet<int>(); 
+        for (int i = 0; i < arr.Length; ++i) { 
+            int temp = sum - arr[i]; 
+  
+            // checking for condition 
+            if (s.Contains(temp)) { 
+                Console.Write("Pair with given sum " + sum + " is (" + arr[i] + ", " + temp + ")"); 
+            } 
+            s.Add(arr[i]); 
+        } 
+    } 
+Time Complexity: O(n)
+Auxiliary Space: O(n) where n is size of array.
+***********************************************************************************************************************************
+
+/ C# program to check for pair 
+// in A[] with sum as x 
+  
+using System; 
+  
+class GFG { 
+    static bool hasArrayTwoCandidates(int[] A, 
+                                      int arr_size, int sum) 
+    { 
+        int l, r; 
+  
+        /* Sort the elements */
+        sort(A, 0, arr_size - 1); 
+  
+        /* Now look for the two candidates  
+        in the sorted array*/
+        l = 0; 
+        r = arr_size - 1; 
+        while (l < r) { 
+            if (A[l] + A[r] == sum) 
+                return true; 
+            else if (A[l] + A[r] < sum) 
+                l++; 
+            else // A[i] + A[j] > sum 
+                r--; 
+        } 
+        return false; 
+    } 
+  
+    /* Below functions are only to sort the  
+    array using QuickSort */
+  
+    /* This function takes last element as pivot, 
+    places the pivot element at its correct 
+    position in sorted array, and places all 
+    smaller (smaller than pivot) to left of 
+    pivot and all greater elements to right 
+    of pivot */
+    static int partition(int[] arr, int low, int high) 
+    { 
+        int pivot = arr[high]; 
+  
+        // index of smaller element 
+        int i = (low - 1); 
+        for (int j = low; j <= high - 1; j++) { 
+            // If current element is smaller 
+            // than or equal to pivot 
+            if (arr[j] <= pivot) { 
+                i++; 
+  
+                // swap arr[i] and arr[j] 
+                int temp = arr[i]; 
+                arr[i] = arr[j]; 
+                arr[j] = temp; 
+            } 
+        } 
+  
+        // swap arr[i+1] and arr[high] (or pivot) 
+        int temp1 = arr[i + 1]; 
+        arr[i + 1] = arr[high]; 
+        arr[high] = temp1; 
+  
+        return i + 1; 
+    } 
+  
+    /* The main function that  
+    implements QuickSort() 
+    arr[] --> Array to be sorted, 
+    low --> Starting index, 
+    high --> Ending index */
+    static void sort(int[] arr, int low, int high) 
+    { 
+        if (low < high) { 
+            /* pi is partitioning index, arr[pi]  
+            is now at right place */
+            int pi = partition(arr, low, high); 
+  
+            // Recursively sort elements before 
+            // partition and after partition 
+            sort(arr, low, pi - 1); 
+            sort(arr, pi + 1, high); 
+        } 
+    } 
+  
+    // Driver code 
+    public static void Main() 
+    { 
+        int[] A = { 1, 4, 45, 6, 10, -8 }; 
+        int n = 16; 
+        int arr_size = 6; 
+  
+        if (hasArrayTwoCandidates(A, arr_size, n)) 
+            Console.Write("Array has two elements"
+                          + " with given sum"); 
+        else
+            Console.Write("Array doesn't have "
+                          + "two elements with given sum"); 
+    } 
+} 
+  
+
+/////////////////////////////////////////////////////////////
+Program for Fibonacci numbers
+Time Complexity: T(n) = T(n-1) + T(n-2) which is exponential.
+Method 1 ( Use recursion )
+ public static int Fib(int n)  
+    {  
+        if (n <= 1)  
+        {  
+            return n;  
+        }  
+        else
+        {  
+            return Fib(n - 1) + Fib(n - 2);  
+        }  
+    }  
+     
+
+ ( Use Dynamic Programming )
+static int fib(int n) 
+    { 
+          
+        // Declare an array to  
+        // store Fibonacci numbers. 
+        // 1 extra to handle  
+        // case, n = 0 
+        int []f = new int[n + 2];  
+        int i; 
+          
+        /* 0th and 1st number of the  
+           series are 0 and 1 */
+        f[0] = 0; 
+        f[1] = 1; 
+          
+        for (i = 2; i <= n; i++) 
+        { 
+            /* Add the previous 2 numbers 
+               in the series and store it */
+            f[i] = f[i - 1] + f[i - 2]; 
+        } 
+          
+        return f[n]; 
+    } 
+
+
+Method 3 ( Space Optimized Method 2 )
+static int Fib(int n)  
+        {  
+            int a = 0, b = 1, c = 0;  
+              
+            // To return the first Fibonacci number  
+            if (n == 0) return a;  
+      
+            for (int i = 2; i <= n; i++)  
+            {  
+                c = a + b;  
+                a = b;  
+                b = c;  
+            }  
+      
+            return b;  
+        }  
+		Time Complexity:O(n)
+Extra Space: O(1)
+ ////////////////////////////////////////////////////////////////////////////
+ // In the implementation dp[n,k] represents  
+    // maximum sum subsequence of length k and the  
+    // subsequence is ending at index n.  
+    int [,]dp=new int[n, k + 1]; 
+    int ans = -1;  
+  
+    // Initializing whole multidimensional  
+    // dp array with value -1  
+    for(int i = 0; i < n; i++) 
+        for(int j = 0; j < k + 1; j++) 
+            dp[i, j]=-1; 
+  
+    // For each ith position increasing subsequence  
+    // of length 1 is equal to that array ith value  
+    // so initializing dp[i,1] with that array value  
+    for (int i = 0; i < n; i++)  
+    {  
+        dp[i, 1] = arr[i];  
+    }  
+  
+    // Starting from 1st index as we have calculated  
+    // for 0th index. Computing optimized dp values  
+    // in bottom-up manner  
+    for (int i = 1; i < n; i++)  
+    {  
+        for (int j = 0; j < i; j++)  
+        {  
+  
+            // check for increasing subsequence  
+            if (arr[j] < arr[i])  
+            {  
+                for (int l = 1; l <= k - 1; l++)  
+                {  
+  
+                    // Proceed if value is pre calculated  
+                    if (dp[j, l] != -1) 
+                    {  
+  
+                        // Check for all the subsequences  
+                        // ending at any j<i and try including  
+                        // element at index i in them for  
+                        // some length l. Update the maximum  
+                        // value for every length.  
+                        dp[i, l + 1] = Math.Max(dp[i, l + 1], dp[j, l] + arr[i]);  
+                    }  
+                }  
+            }  
+        }  
+    }  
+  
+    // The final result would be the maximum  
+    // value of dp[i,k] for all different i.  
+    for (int i = 0; i < n; i++)  
+    {  
+        if (ans < dp[i, k])  
+            ans = dp[i, k];  
+    }  
+  
+    // When no subsequence of length k is  
+    // possible sum would be considered zero  
+    return (ans == -1) ? 0 : ans;  
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Distribute candies :
+find max sum upto natural numbers < N using BS
+
+last number will always be a multiple of k , we get last number of complete turn 
+ 
+///////////////////////////////////////////////////////////////////////////////////////////////
+//sum as 0 : 
+//1.Base check : low == high , sum = 0
+//keep visited array : visit[i,s+arrsize]
+ // Returns the value if a state is already solved 
+        if (visit[i, s + arrSize])  
+        { 
+            return dp[i, s + arrSize]; 
+        } 
+  
+        // If the state is not visited, then continue 
+        visit[i, s + arrSize] = true; 
+  
+        // Recurrence relation 
+        dp[i, s + arrSize] = SubsetCnt(i + 1, s + arr[i], arr, n) 
+                + SubsetCnt(i + 1, s, arr, n); 
+  
+        // Returning the value 
+        return dp[i,s + arrSize]; 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+lis:initialize all with 1 initially . 
+ int []lis = new int[n];  
+        int i,j,max = 0;  
+  
+        /* Initialize LIS values for all indexes */
+        for ( i = 0; i < n; i++ )  
+            lis[i] = 1;  
+  
+        /* Compute optimized LIS values in bottom up manner */
+        for ( i = 1; i < n; i++ )  
+            for ( j = 0; j < i; j++ )  
+                        if ( arr[i] > arr[j] && lis[i] < lis[j] + 1)  
+                    lis[i] = lis[j] + 1;  
+  
+        /* Pick maximum of all LIS values */
+        for ( i = 0; i < n; i++ )  
+            if ( max < lis[i] )  
+                max = lis[i];  
+  
+            return max; 
+
+///////////////////////////////////////////////////////////////////////////
+
+1. to check the sum of the subset: 
+->it will be 1 if element is equal to the sum that it is forming 
+->when sum-previous element is 1 
+->when value at row less than is 1 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+foreach (KeyValuePair<string, Int16> author in AuthorList.OrderBy(key => key.Value))  
+    {  
+        Console.WriteLine("Key: {0}, Value: {1}", author.Key, author.Value);  
+    }
+
+ //////////////////////////////////////////////////////////////////////////////////////////////////////// 
+lcs:(longest common subsequence )
+ 
+    /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
+    static int lcs( char[] X, char[] Y, int m, int n ) 
+    { 
+        if (m == 0 || n == 0) 
+        return 0; 
+        if (X[m - 1] == Y[n - 1]) 
+        return 1 + lcs(X, Y, m - 1, n - 1); 
+        else
+        return max(lcs(X, Y, m, n - 1), lcs(X, Y, m - 1, n)); 
+    } 
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////    
+largest subarray with contiguous elements
+// Returns length of the longest contiguous subarray 
+int findLength(int arr[], int n) 
+{ 
+    int max_len = 1;  // Initialize result 
+    for (int i=0; i<n-1; i++) 
+    { 
+        // Initialize min and max for all subarrays starting with i 
+        int mn = arr[i], mx = arr[i]; 
+  
+        // Consider all subarrays starting with i and ending with j 
+        for (int j=i+1; j<n; j++) 
+        { 
+            // Update min and max in this subarray if needed 
+            mn = min(mn, arr[j]); 
+            mx = max(mx, arr[j]); 
+  
+            // If current subarray has all contiguous elements 
+            if ((mx - mn) == j-i) 
+                max_len = max(max_len, mx-mn+1); 
+        } 
+    } 
+    return max_len;  // Return result 
+} 
+///////////////////////////////////////////////////////////////////////////////////////
+print-equal-sum-sets-array-partition-problem-
+ PartitionProblem : sum of elements both sets 
+ is equal. 
+ 1. declare two sets set 1 and set 2.
+ 2. To recover the solution, traverse the boolean dp table backwards starting from the final result dp[n][k],
+  where n = number of elements and
+  k = sum/2.
+   
+ Set 1 will consists of elements that contribute to sum k and other elements that do not contribute are added to set 2. 
+	
+Follow these steps at each position to recover the solution.
+
+Check if dp[i-1][sum] is true or not.
+1. If it is true, then current element does not contribute to sum k.
+ Add this element to set 2.
+  Update index i by i-1 and sum remains unchanged.
+2.If dp[i-1][sum] is false, then current element contribute to sum k. 
+Add current element to set 1. Update index i by i-1 and sum by sum-arr[i-1].
+ //////////////////////////////////////////////////////////////////////////////////////////////////////// 
+Longest Subarray having sum of elements atmost ‘k’
+***
+An efficient approach is to use sliding window technique.
+
+Traverse the array and check if on adding the current element its sum is less than or equal to k.
+If it’s less than k then add it to sum and increase the count.
+Else
+Remove the first element of subarray and decrease the count.
+Again check if on adding the current element its sum is less than or equal to k.
+If it’s less than k then add it to sum and increase the count.
+Keep track of Maximum count.
+**
+ // function to find the length of largest subarray having sum atmost k. Time Complexity : O(n)
+    public static int atMostSum(int []arr, int n, 
+                                           int k) 
+    { 
+        int sum = 0; 
+        int cnt = 0, maxcnt = 0; 
+      
+        for (int i = 0; i < n; i++) { 
+              
+            // If adding current element doesn't 
+            // cross limit add it to current window 
+            if ((sum + arr[i]) <= k) { 
+                sum += arr[i];  
+                cnt++; 
+            }  
+      
+            // Else, remove first element  
+            // of current window. 
+            else if(sum!=0) 
+            { 
+                sum = sum - arr[i - cnt] + arr[i]; 
+            } 
+      
+            // keep track of max length. 
+            maxcnt = Math.Max(cnt, maxcnt);  
+        } 
+        return maxcnt; 
+    } 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Prints the minimum range   
+// that contains exactly k   
+// distinct numbers.  
+public static void minRange(int[] arr, int n, int k) 
+{ 
+    int l = 0, r = n; 
+  
+    // Consider every element   
+    // as starting point.  
+    for (int i = 0; i < n; i++) 
+    { 
+  
+        // Find the smallest window   
+        // starting with arr[i] and   
+        // containing exactly k   
+        // distinct elements.  
+        ISet<int> s = new HashSet<int>(); 
+        int j; 
+        for (j = i; j < n; j++) 
+        { 
+            s.Add(arr[j]); 
+            if (s.Count == k) 
+            { 
+                if ((j - i) < (r - l)) 
+                { 
+                    r = j; 
+                    l = i; 
+                } 
+                break; 
+            } 
+        } 
+  
+        // There are less than k   
+        // distinct elements now,   
+        // so no need to continue.  
+        if (j == n) 
+        { 
+            break; 
+        } 
+    } 
+  
+    // If there was no window   
+    // with k distinct elements   
+    // (k is greater than total   
+    // distinct elements)  
+    if (l == 0 && r == n) 
+    { 
+        Console.WriteLine("Invalid k"); 
+    } 
+    else
+    { 
+        Console.WriteLine(l + " " + r); 
+    } 
+} 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+   public static void powerSet(string str, int index,
+                             string curr)
+        {
+            int n = str.Length;
+
+            // base case  
+            if (index == n)
+            {
+                return;
+            }
+
+            // First print current subset  
+            Console.WriteLine(curr);
+
+            // Try appending remaining characters  
+            // to current subset  
+            for (int i = index + 1; i < n; i++)
+            {
+                curr += str[i];
+                powerSet(str, i, curr);
+
+                // Once all subsets beginning with  
+                // initial "curr" are printed, remove  
+                // last character to consider a different  
+                // prefix of subsets.  
+                curr = curr.Substring(0, curr.Length - 1);
+            }
+        }

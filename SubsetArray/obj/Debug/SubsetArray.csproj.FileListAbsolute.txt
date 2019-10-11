@@ -1,0 +1,6 @@
+C:\Users\H372430\documents\visual studio 2015\Projects\SubsetArray\SubsetArray\bin\Debug\SubsetArray.exe.config
+C:\Users\H372430\documents\visual studio 2015\Projects\SubsetArray\SubsetArray\bin\Debug\SubsetArray.exe
+C:\Users\H372430\documents\visual studio 2015\Projects\SubsetArray\SubsetArray\bin\Debug\SubsetArray.pdb
+C:\Users\H372430\documents\visual studio 2015\Projects\SubsetArray\SubsetArray\obj\Debug\SubsetArray.exe
+C:\Users\H372430\documents\visual studio 2015\Projects\SubsetArray\SubsetArray\obj\Debug\SubsetArray.pdb
+C:\Users\H372430\documents\visual studio 2015\Projects\SubsetArray\SubsetArray\obj\Debug\SubsetArray.csprojResolveAssemblyReference.cache
